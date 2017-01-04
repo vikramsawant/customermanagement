@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!-- Add support for component scanning -->
+	<context:component-scan base-package="com.asurion.bo.sb.customermanagement" />
+	<!-- @Component has 3 sub classes 
+			@Controller : For Controllers 
+			@Repository : For DAO's (provides translation of any JDBC related exceptions. Any checked exceptions will be translated to unchecked) 
+			@Service : Service Facade design pattern. Intermediate layer for business logic. Integrate multiple DAO's 
+		 Since they are sub-classes to Component, they are included in component scanning 
+	-->
+
+	<!-- * Add support for conversion, formatting and validation support. 
+		 * This is what makes @Controller/Service/Repository annotations work 
+	-->
+	<mvc:annotation-driven />
+
+	<!-- * Spring MVC's dispatcher servlet needs some kind of view resolver to translate what controller returns to an actual view to display (jsp in this case) 
+		 * If you open the package org.springframework.web.servlet.view there are other view resolvers out there that spring could use 
+		 * Spring is not limited to use of servlet/jsp's 
+	-->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	
+	<!-- * Add support for reading static web resources: css, images, js, etc 
+		 * "mapping" below is for url mapping to reference these resources 
+		 * In the mapping below ** means to recurse to include sub directories 
+	-->
+	<mvc:resources location="/WEB-INF/resources/" mapping="/resources/**"></mvc:resources>
+
+</beans>

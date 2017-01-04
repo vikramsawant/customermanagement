@@ -1,0 +1,5 @@
+Following things are NOT working in project
+
+- When the project loads, since in web.xml we have mentioned index.jsp as a welcome file which redirects to /customer/list, I am not able to get past the spring security
+- This means that when project load, I am presented with login screen even though I have mentioned/customer/list as permitAll in security-context.xml
+- If you go to/customer/list directly when the project load, you will be able to view that page without being logged in

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<display-name>CustomerManagement</display-name>
+	<welcome-file-list>
+		<!-- Loads this page at startup -->
+		<welcome-file>/WEB-INF/view/index.jsp</welcome-file>
+	</welcome-file-list>
+	<servlet>
+		<servlet-name>crm</servlet-name>
+		<!-- * All request to our application are sent to dispatcher servlet. 
+			 * Dispatcher servlet forwards all requests with specified url pattern to matching controller 
+		-->
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!-- * If you dont need 'init-param' then servlet needs to be with specific name. 
+			 * By default system will look under WebContent/WEB-INF folder 
+			 * The name of the servlet should be <servlet-name> from line 12 concatenated with "-servlet.xml" 
+			 * In our example it should be "crm-servlet.xml" 
+			 * init param loads initial bean context (servlet config)
+			 * For rest of the bean context that needs to be loaded we have used listener below as there can be only 1 init param in web.xml
+		-->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/crm.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<!-- Should be same as that of line #12 -->
+		<servlet-name>crm</servlet-name>
+		<!-- '/' below means route all requests to this servlet -->
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<!-- If you have beans defined in multiple files you can use ContextLoaderListner to load them. Refer S7L61 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:com/asurion/bo/sb/customermanagement/config/security-context.xml
+		</param-value>
+	</context-param>
+
+
+
+	<!-- Filter added for Spring Security. Refer S10L93 -->
+	<filter>
+		<display-name>springSecurityFilterChain</display-name>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<!-- Filter handles all requests coming in -->
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+</web-app>
